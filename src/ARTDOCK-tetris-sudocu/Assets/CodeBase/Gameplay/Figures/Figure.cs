@@ -1,6 +1,8 @@
-﻿namespace CodeBase.Gameplay.Figures
+﻿using UnityEngine;
+
+namespace CodeBase.Gameplay.Figures
 {
-    public class Figure
+    public class Figure : MonoBehaviour
     {
         
     }

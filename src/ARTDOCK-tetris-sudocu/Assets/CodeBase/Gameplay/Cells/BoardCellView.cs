@@ -1,6 +1,8 @@
-﻿namespace CodeBase.Gameplay.Cells
+﻿using UnityEngine;
+
+namespace CodeBase.Gameplay.Cells
 {
-    public class BoardCellView
+    public class BoardCellView : MonoBehaviour
     {
         
     }
