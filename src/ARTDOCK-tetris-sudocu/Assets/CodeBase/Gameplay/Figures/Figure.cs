@@ -1,4 +1,4 @@
-﻿namespace CodeBase.Gameplay.Board.Figures
+﻿namespace CodeBase.Gameplay.Figures
 {
     public class Figure
     {

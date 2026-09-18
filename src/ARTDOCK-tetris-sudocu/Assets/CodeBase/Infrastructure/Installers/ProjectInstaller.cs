@@ -1,5 +1,7 @@
 ﻿using CodeBase.Infrastructure.CoroutineRunner;
+using CodeBase.Infrastructure.Input;
 using CodeBase.Infrastructure.Loading;
+using CodeBase.Infrastructure.MainCameraService;
 using CodeBase.Infrastructure.StateMachineService.StateMachine;
 using UnityEngine;
 using Zenject;
@@ -15,6 +17,21 @@ namespace CodeBase.Infrastructure.Installers
             BindCoroutineRunner();
             BindSceneLoadingService();
             BindGameStateMachine();
+            BindInputService();
+            BindCameraService();
+        }
+
+        private void BindCameraService()
+        {
+            Container.Bind<ICameraService>()
+                .To<CameraService>()
+                .AsSingle();
+        }
+
+        private void BindInputService()
+        {
+            Container.BindInterfacesTo<InputService>()
+                .AsSingle();
         }
 
         private void BindGameStateMachine()
