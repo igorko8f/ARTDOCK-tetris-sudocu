@@ -2,6 +2,7 @@
 using CodeBase.Gameplay.Board;
 using CodeBase.Gameplay.Cells;
 using CodeBase.Gameplay.Figures;
+using CodeBase.Gameplay.Figures.Tray;
 
 namespace CodeBase.Infrastructure.ResourcesProvider
 {
@@ -14,6 +15,8 @@ namespace CodeBase.Infrastructure.ResourcesProvider
             new (typeof(FigureConfiguration), "Configuration/Figures"),
             new (typeof(BoardCell), "Prefabs"),
             new (typeof(GameBoardView), "Prefabs"),
+            new (typeof(FigureTray), "Prefabs"),
+            new (typeof(Figure), "Prefabs"),
         };
 
         public static string GetLocation<TResource>() where TResource : IResource
