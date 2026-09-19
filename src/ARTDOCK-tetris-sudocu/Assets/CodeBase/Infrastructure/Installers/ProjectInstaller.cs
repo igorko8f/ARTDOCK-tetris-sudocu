@@ -2,6 +2,7 @@
 using CodeBase.Infrastructure.Input;
 using CodeBase.Infrastructure.Loading;
 using CodeBase.Infrastructure.MainCameraService;
+using CodeBase.Infrastructure.ResourcesProvider;
 using CodeBase.Infrastructure.StateMachineService.StateMachine;
 using UnityEngine;
 using Zenject;
@@ -19,6 +20,14 @@ namespace CodeBase.Infrastructure.Installers
             BindGameStateMachine();
             BindInputService();
             BindCameraService();
+            BindProjectResourcesProvider();
+        }
+
+        private void BindProjectResourcesProvider()
+        {
+            Container.Bind<IProjectResourcesProvider>()
+                .To<ProjectResourcesProvider>()
+                .AsSingle();
         }
 
         private void BindCameraService()

@@ -1,10 +1,11 @@
 ﻿using System;
+using CodeBase.Infrastructure.ResourcesProvider;
 using UnityEngine;
 
 namespace CodeBase.Gameplay.Figures
 {
     [CreateAssetMenu(fileName = "Figure", menuName = "Gameplay/Figure/Empty")]
-    public class FigureConfiguration : ScriptableObject, ISerializationCallbackReceiver
+    public class FigureConfiguration : ScriptableObject, ISerializationCallbackReceiver, IResource
     {
         public const int Size = 5;
         public bool[,] Matrix => _matrix;

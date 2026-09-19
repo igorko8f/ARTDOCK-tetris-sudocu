@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2667999944666075233}
+  - component: {fileID: 24316252654369957}
   m_Layer: 0
   m_Name: View
   m_TagString: Untagged
@@ -32,6 +33,22 @@ Transform:
   - {fileID: 2088073993178585501}
   m_Father: {fileID: 829198312048258239}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &24316252654369957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3347066385723634369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f64928284924e08977cc1b9fb9e190c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CodeBase.Gameplay.Cells.BoardCellView
+  _spriteRenderer: {fileID: 4779162084947376218}
+  _activeSprite: {fileID: 6750033715232265413, guid: 0410ff0d547c5d5448640eddc90eb791, type: 3}
+  _previewSprite: {fileID: 6750033715232265413, guid: bc38b9ecdb267314f8f43797abce8989, type: 3}
+  _disabledSprite: {fileID: 385173514463150410, guid: e18e52f28ef92864d883598d3961b3b4, type: 3}
 --- !u!1 &3883003884177938055
 GameObject:
   m_ObjectHideFlags: 0
@@ -41,7 +58,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 829198312048258239}
-  - component: {fileID: 1849178370203300658}
+  - component: {fileID: 4607315953737616729}
   m_Layer: 0
   m_Name: Cell
   m_TagString: Untagged
@@ -65,7 +82,7 @@ Transform:
   - {fileID: 2667999944666075233}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1849178370203300658
+--- !u!114 &4607315953737616729
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -74,9 +91,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3883003884177938055}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f64928284924e08977cc1b9fb9e190c, type: 3}
+  m_Script: {fileID: 11500000, guid: ba31f1ac8af8423cbd867320c4bd6d62, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CodeBase.Gameplay.Cells.BoardCellView
+  m_EditorClassIdentifier: Assembly-CSharp::CodeBase.Gameplay.Cells.BoardCell
+  _view: {fileID: 24316252654369957}
 --- !u!1 &6163313649486294614
 GameObject:
   m_ObjectHideFlags: 0

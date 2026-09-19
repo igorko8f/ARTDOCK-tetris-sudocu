@@ -1,7 +1,12 @@
-﻿namespace CodeBase.Gameplay.Board.States
+﻿using CodeBase.Infrastructure.StateMachineService.StateInfrastructure;
+
+namespace CodeBase.Gameplay.Board.States
 {
-    public class AnimationState
+    public class AnimationState : SimpleState
     {
-        
+        public AnimationState()
+        {
+            
+        }
     }
 }

@@ -1,7 +1,12 @@
-﻿namespace CodeBase.Gameplay.Board.States
+﻿using CodeBase.Infrastructure.StateMachineService.StateInfrastructure;
+
+namespace CodeBase.Gameplay.Board.States
 {
-    public class IdleState
+    public class IdleState : SimpleState
     {
-        
+        public IdleState()
+        {
+            
+        }
     }
 }
