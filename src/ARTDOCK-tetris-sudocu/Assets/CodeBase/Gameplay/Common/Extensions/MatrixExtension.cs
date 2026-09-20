@@ -101,7 +101,7 @@ namespace CodeBase.Gameplay.Common.Extensions
             return visitedCount == matrix.OccupiedCells();
         }
         
-        public static bool[,] RotateClockwise(this bool[,] matrix)
+        public static bool[,] Rotate(this bool[,] matrix, bool clockwise)
         {
             var rows = matrix.GetLength(0);
             var cols = matrix.GetLength(1);
@@ -112,7 +112,10 @@ namespace CodeBase.Gameplay.Common.Extensions
             {
                 for (var col = 0; col < cols; col++)
                 {
-                    rotatedMatrix[col, rows - 1 - row] = matrix[row, col];
+                    rotatedMatrix[
+                        clockwise ? col : cols - 1 - col, 
+                        clockwise ? rows - 1 - row : row] 
+                        = matrix[row, col];
                 }
             }
             

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using CodeBase.Gameplay.Cells;
 using CodeBase.Gameplay.Cells.Factory;
 using CodeBase.Gameplay.Common.Extensions;
-using CodeBase.Infrastructure.Input;
+using CodeBase.Infrastructure.MainCameraService;
 using CodeBase.Infrastructure.ResourcesProvider;
 using DG.Tweening;
 using R3;
@@ -14,12 +14,12 @@ namespace CodeBase.Gameplay.Figures
 {
     public class Figure : MonoBehaviour, IResource, IDisposable
     {
+        [SerializeField] private FigureUI _figureUI;
         [SerializeField] private Transform _cellsRoot;
         [SerializeField] private float _rotateAnimationDuration = 0.2f;
-
-        private IInputService _inputService;
+        
         private IBoardCellsFactory _boardCellsFactory;
-        private CompositeDisposable _dispossable;
+        private CompositeDisposable _compositeDisposable;
 
         private int MaxSize => FigureConfiguration.Size;
         private int X_Size => _matrix.GetLength(0);
@@ -29,33 +29,34 @@ namespace CodeBase.Gameplay.Figures
         private List<BoardCell> _cells;
 
         [Inject]
-        public void Construct(IInputService inputService,
-            IBoardCellsFactory boardCellsFactory)
+        public void Construct(IBoardCellsFactory boardCellsFactory, ICameraService cameraService)
         {
-            _inputService = inputService;
             _boardCellsFactory = boardCellsFactory;
+            _compositeDisposable = new CompositeDisposable();
+            
+            _figureUI.Initialize(cameraService.GetMainCamera());
+            
+            _figureUI.RotateClockwisePressed
+                .Subscribe(_ => Rotate(true))
+                .AddTo(_compositeDisposable);
+            
+            _figureUI.RotateCounterClockwisePressed
+                .Subscribe(_ => Rotate(false))
+                .AddTo(_compositeDisposable);
             
             _cells = new List<BoardCell>(MaxSize * MaxSize);
         }
 
         public void Initialize(FigureConfiguration configuration)
         {
-            _dispossable = new CompositeDisposable();
             _matrix = configuration.Matrix.CropToBounds();
             
-            _inputService.RotatePressed
-                .Subscribe(_ => Rotate())
-                .AddTo(_dispossable);
-
             BuildFigureCells();
         }
-
-        private void OnDestroy() => 
-            Dispose();
-
+        
         public void Dispose()
         {
-            _dispossable?.Dispose();
+            _compositeDisposable.Dispose();
             CleanUpCells();
         }
 
@@ -123,12 +124,13 @@ namespace CodeBase.Gameplay.Figures
         private Vector2 GetCellsRootPosition() => 
             _cellsRoot.position;
 
-        private void Rotate()
+        private void Rotate(bool clockwise)
         {
-            _matrix = _matrix.RotateClockwise();
+            _matrix = _matrix.Rotate(clockwise);
             PositionateCells(false);
-            
-            _cellsRoot.DORotate(new Vector3(0, 0, _cellsRoot.eulerAngles.z - 90), _rotateAnimationDuration)
+
+            _cellsRoot.DOComplete();
+            _cellsRoot.DORotate(new Vector3(0, 0, _cellsRoot.eulerAngles.z - ( clockwise ? 90 : -90)), _rotateAnimationDuration)
                 .SetEase(Ease.InOutSine);
         }
     }
