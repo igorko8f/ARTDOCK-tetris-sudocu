@@ -57,5 +57,14 @@ namespace CodeBase.Gameplay.Cells
                 _data.Position.y - offsetY
             );
         }
+        
+        public float GetCellSize() => 
+            transform.localScale.x;
+
+        public bool IsActive() => 
+            _data.IsActive;
+
+        public bool PreviewEnabled() => 
+            _data.IsPreviewEnabled;
     }
 }

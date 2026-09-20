@@ -15,5 +15,11 @@ namespace CodeBase.Gameplay.Figures
         
         public void Initialize(Camera mainCamera) => 
             _canvas.worldCamera = mainCamera;
+
+        public void Show() => 
+            gameObject.SetActive(true);
+
+        public void Hide() => 
+            gameObject.SetActive(false);
     }
 }

@@ -7,9 +7,13 @@ namespace CodeBase.Gameplay.Cells.Factory
 {
     public class BoardCellsFactory : IBoardCellsFactory, IDisposable
     {
+        public float CellSize => _cellSize;
+        
         private readonly IProjectResourcesProvider _resourcesProvider;
         private readonly DiContainer _container;
         private readonly BoardCell _cellPrefab;
+
+        private float _cellSize = 0f;
 
         public BoardCellsFactory(IProjectResourcesProvider resourcesProvider,
             DiContainer container)
@@ -18,6 +22,7 @@ namespace CodeBase.Gameplay.Cells.Factory
             _container = container;
             
             _cellPrefab = _resourcesProvider.LoadResource<BoardCell>();
+            _cellSize = _cellPrefab.GetCellSize();
         }
 
         public BoardCell CreateEmptyCell(int x, int y, Transform parent)

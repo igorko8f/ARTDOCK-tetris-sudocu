@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 6569629188210120282}
   - component: {fileID: 8641890105245661105}
   - component: {fileID: 2668965198115208173}
+  - component: {fileID: 2595175470461255349}
   m_Layer: 10
   m_Name: Figure
   m_TagString: Untagged
@@ -170,6 +171,8 @@ MonoBehaviour:
   _figureUI: {fileID: 1042727616283989276}
   _cellsRoot: {fileID: 1113912291193932693}
   _rotateAnimationDuration: 0.2
+  _collider: {fileID: 2668965198115208173}
+  _rigidbody: {fileID: 2595175470461255349}
 --- !u!61 &2668965198115208173
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -200,7 +203,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -216,6 +219,33 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 5, y: 5}
   m_EdgeRadius: 0
+--- !u!50 &2595175470461255349
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1450951141907300208}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &4291579462967057351
 GameObject:
   m_ObjectHideFlags: 0

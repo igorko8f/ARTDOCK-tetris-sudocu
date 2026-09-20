@@ -2,6 +2,8 @@
 using CodeBase.Gameplay.Board.Factory;
 using CodeBase.Gameplay.Board.States;
 using CodeBase.Gameplay.Cells.Factory;
+using CodeBase.Gameplay.Draggables;
+using CodeBase.Gameplay.Draggables.Physics;
 using CodeBase.Gameplay.Figures.Factory;
 using CodeBase.Gameplay.Figures.Tray;
 using CodeBase.Infrastructure.StateMachineService.StateMachine;
@@ -21,12 +23,23 @@ namespace CodeBase.Infrastructure.Installers
             BindGameBoard();
             BindGameStateMachine();
             BindFigures();
+            BindDraggableService();
         }
 
         public void Initialize()
         {
             Container.Resolve<IGameStateMachine>()
                 .Enter<InitializeGameState>();
+        }
+
+        private void BindDraggableService()
+        {
+            Container.BindInterfacesTo<DraggableService>()
+                .AsSingle();
+            
+            Container.Bind<IPhysicsInteractions>()
+                .To<PhysicsInteractions>()
+                .AsSingle();
         }
 
         private void BindFigures()

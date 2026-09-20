@@ -23,6 +23,8 @@ namespace CodeBase.Gameplay.Figures.Tray
         
         private List<FigureConfiguration> _figuresConfigs;
 
+        private int _currentTrayElements;
+        
         [Inject]
         public void Construct(Transform origin, 
             IProjectResourcesProvider resourcesProvider,
@@ -41,18 +43,25 @@ namespace CodeBase.Gameplay.Figures.Tray
             
         }
 
+        public void RemoveFigure(Figure figure)
+        {
+            figure.Dispose();
+            _currentTrayElements -= 1;
+            
+            if (_currentTrayElements <= 0)
+            {
+                BuildTray();
+            }
+        }
+
         public void BuildTray()
         {
             BuildNewFigures();
             InitializeFigures();
+            
+            _currentTrayElements = TraySize;
         }
 
-        public void Cleanup()
-        {
-            foreach (var figure in _figures) 
-                figure.Dispose();
-        }
-        
         private void InitializeFigures()
         {
             var selectedConfigs = new List<FigureConfiguration>();
@@ -63,10 +72,10 @@ namespace CodeBase.Gameplay.Figures.Tray
                 var randomConfig = _figuresConfigs.PickRandom(selectedConfigs);
                 selectedConfigs.Add(randomConfig);
                 
-                _figures[i].Initialize(randomConfig);
-
                 var position = (i * (xFigureSize + _figureXOffset)) - xFigureSize;
                 _figures[i].transform.localPosition = new Vector3(position, 0, 0);
+                
+                _figures[i].Initialize(randomConfig);
             }
         }
 

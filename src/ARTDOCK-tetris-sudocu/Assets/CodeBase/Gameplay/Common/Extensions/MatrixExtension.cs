@@ -6,6 +6,12 @@ namespace CodeBase.Gameplay.Common.Extensions
 {
     public static class MatrixExtension
     {
+        public static int SizeX(this bool[,] matrix) =>
+            matrix.GetLength(0);
+        
+        public static int SizeY(this bool[,] matrix) => 
+            matrix.GetLength(1);
+
         public static IEnumerable<(int x, int y, bool state)> GetActiveNeighbours(this bool[,] matrix, int x, int y)
         {
             var neighbours = new List<(int x, int y, bool state)>();
@@ -45,9 +51,9 @@ namespace CodeBase.Gameplay.Common.Extensions
         
         private static (int x, int y, bool state) FindFirstActiveCell(bool[,] matrix)
         {
-            for (var x = 0; x < matrix.GetLength(0); x++)
+            for (var x = 0; x < matrix.SizeX(); x++)
             {
-                for (var y = 0; y < matrix.GetLength(1); y++)
+                for (var y = 0; y < matrix.SizeY(); y++)
                 {
                     if (matrix[x, y])
                         return (x, y, true);
@@ -60,9 +66,9 @@ namespace CodeBase.Gameplay.Common.Extensions
         private static bool IsInside(bool[,] matrix, int x, int y)
         {
             return x >= 0 &&
-                   x < matrix.GetLength(0) &&
+                   x < matrix.SizeX() &&
                    y >= 0 &&
-                   y < matrix.GetLength(1);
+                   y < matrix.SizeY();
         }
         
         public static bool IsConnected(this bool[,] matrix)
@@ -72,7 +78,7 @@ namespace CodeBase.Gameplay.Common.Extensions
             if (start == (0, 0, false))
                 return true;
 
-            var visited = new bool[matrix.GetLength(0), matrix.GetLength(1)];
+            var visited = new bool[matrix.SizeX(), matrix.SizeY()];
 
             var queue = new Queue<(int x, int y, bool state)>();
             queue.Enqueue(start);
@@ -103,8 +109,8 @@ namespace CodeBase.Gameplay.Common.Extensions
         
         public static bool[,] Rotate(this bool[,] matrix, bool clockwise)
         {
-            var rows = matrix.GetLength(0);
-            var cols = matrix.GetLength(1);
+            var rows = matrix.SizeX();
+            var cols = matrix.SizeY();
             
             var rotatedMatrix = new bool[cols, rows];
 
@@ -124,8 +130,8 @@ namespace CodeBase.Gameplay.Common.Extensions
         
         public static bool[,] CropToBounds(this bool[,] matrix)
         {
-            var rows = matrix.GetLength(0);
-            var cols = matrix.GetLength(1);
+            var rows = matrix.SizeX();
+            var cols = matrix.SizeY();
 
             var minRow = rows;
             var maxRow = -1;

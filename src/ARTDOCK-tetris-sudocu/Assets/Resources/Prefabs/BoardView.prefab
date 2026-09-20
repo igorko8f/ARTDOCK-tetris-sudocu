@@ -101,6 +101,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4303523210452346325}
   - component: {fileID: 7849843362726583501}
+  - component: {fileID: 2477128801961479485}
   m_Layer: 0
   m_Name: BoardView
   m_TagString: Untagged
@@ -141,6 +142,19 @@ MonoBehaviour:
   _boardCenter: {fileID: 9098591979593886403}
   _boardBorders: {fileID: 1243674873295738107}
   _cellsParent: {fileID: 4190310412649519725}
+--- !u!210 &2477128801961479485
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3713716724575515773}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: -1
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
 --- !u!1 &5472182703617874443
 GameObject:
   m_ObjectHideFlags: 0

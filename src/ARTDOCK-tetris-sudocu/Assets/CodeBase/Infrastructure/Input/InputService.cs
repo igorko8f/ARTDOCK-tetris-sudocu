@@ -12,13 +12,15 @@ namespace CodeBase.Infrastructure.Input
 
         public Observable<Unit> RotatePressed => _rotatePressed;
         public Observable<Unit> PausePressed => _pausePressed;
-        public Observable<Unit> MouseClicked => _pausePressed;
+        public Observable<Unit> MouseClicked => _mouseClicked;
+        public Observable<Unit> MouseReleased => _mouseReleased;
 
         private readonly GameInput _gameInput;
         private readonly ICameraService _cameraService;
         private readonly Subject<Unit> _rotatePressed = new();
         private readonly Subject<Unit> _pausePressed = new();
         private readonly Subject<Unit> _mouseClicked = new();
+        private readonly Subject<Unit> _mouseReleased = new();
 
         public InputService(ICameraService cameraService)
         {
@@ -28,6 +30,7 @@ namespace CodeBase.Infrastructure.Input
             _gameInput.Gameplay.RotateFigure.performed += OnRotateFigureButtonPressed;
             _gameInput.Gameplay.Pause.performed += OnPauseButtonPressed;
             _gameInput.Gameplay.PointerClick.performed += OnMouseClicked;
+            _gameInput.Gameplay.PointerClick.canceled += OnMouseReleased;
             
             DisableInput();
         }
@@ -38,10 +41,11 @@ namespace CodeBase.Infrastructure.Input
         public void DisableInput() => 
             _gameInput.Disable();
 
-        public Vector2 GetMousePosition()
+        public Vector3 GetMouseWorldPosition()
         {
             var camera = _cameraService.GetMainCamera();
-            return camera.ScreenToWorldPoint(_gameInput.Gameplay.MousePosition.ReadValue<Vector2>());
+            var mousePosition = _gameInput.Gameplay.MousePosition.ReadValue<Vector2>();
+            return camera.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, -camera.transform.position.z));
         }
 
         public void Dispose()
@@ -51,6 +55,7 @@ namespace CodeBase.Infrastructure.Input
                 _gameInput.Gameplay.RotateFigure.performed -= OnRotateFigureButtonPressed;
                 _gameInput.Gameplay.Pause.performed -= OnPauseButtonPressed;
                 _gameInput.Gameplay.PointerClick.performed -= OnMouseClicked;
+                _gameInput.Gameplay.PointerClick.canceled -= OnMouseReleased;
             }
             
             _gameInput?.Dispose();
@@ -58,6 +63,7 @@ namespace CodeBase.Infrastructure.Input
             _rotatePressed?.Dispose();
             _pausePressed?.Dispose();
             _mouseClicked?.Dispose();
+            _mouseReleased?.Dispose();
         }
 
         private void OnRotateFigureButtonPressed(InputAction.CallbackContext context) => 
@@ -68,5 +74,8 @@ namespace CodeBase.Infrastructure.Input
 
         private void OnMouseClicked(InputAction.CallbackContext obj) => 
             _mouseClicked.OnNext(Unit.Default);
+
+        private void OnMouseReleased(InputAction.CallbackContext obj) => 
+            _mouseReleased.OnNext(Unit.Default);
     }
 }

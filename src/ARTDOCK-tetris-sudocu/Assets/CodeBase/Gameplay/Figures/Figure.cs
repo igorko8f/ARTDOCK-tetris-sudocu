@@ -18,12 +18,18 @@ namespace CodeBase.Gameplay.Figures
         [SerializeField] private Transform _cellsRoot;
         [SerializeField] private float _rotateAnimationDuration = 0.2f;
         
+        [SerializeField] private Collider2D _collider;
+        [SerializeField] private Rigidbody2D _rigidbody;
+        
         private IBoardCellsFactory _boardCellsFactory;
         private CompositeDisposable _compositeDisposable;
 
         private int MaxSize => FigureConfiguration.Size;
         private int X_Size => _matrix.GetLength(0);
         private int Y_Size => _matrix.GetLength(1);
+        
+        private Vector3 _initialPosition;
+        private Transform _origin;
         
         private bool[,] _matrix;
         private List<BoardCell> _cells;
@@ -52,12 +58,58 @@ namespace CodeBase.Gameplay.Figures
             _matrix = configuration.Matrix.CropToBounds();
             
             BuildFigureCells();
+            SetInteractableState(true);
+            
+            _figureUI.Show();
         }
-        
+
+        public void Rotate(bool clockwise)
+        {
+            _matrix = _matrix.Rotate(clockwise);
+            PositionateCells(false);
+
+            _cellsRoot.DOComplete();
+            _cellsRoot.DORotate(new Vector3(0, 0, _cellsRoot.eulerAngles.z - ( clockwise ? 90 : -90)), _rotateAnimationDuration)
+                .SetEase(Ease.InOutSine);
+        }
+
+        public Vector2 GetPosition() => 
+            transform.position;
+
+        public bool[,] GetMatrix() => 
+            _matrix;
+
+        public void SetInteractableState(bool isInteractable)
+        {
+            _collider.enabled = isInteractable;
+        }
+
+        public void BeforeDraggingPerformed()
+        {
+            _initialPosition = transform.localPosition;
+            _origin = transform.parent;
+            _figureUI.Hide();
+            
+            SetInteractableState(false);
+        }
+
+        public void RestorePosition()
+        {
+            transform.parent = _origin;
+            transform.localPosition = _initialPosition;
+            _figureUI.Show();
+            
+            SetInteractableState(true);
+        }
+
         public void Dispose()
         {
             _compositeDisposable.Dispose();
+            
+            RestorePosition();
             CleanUpCells();
+            
+            _figureUI.Hide();
         }
 
         private void CleanUpCells()
@@ -123,15 +175,5 @@ namespace CodeBase.Gameplay.Figures
 
         private Vector2 GetCellsRootPosition() => 
             _cellsRoot.position;
-
-        private void Rotate(bool clockwise)
-        {
-            _matrix = _matrix.Rotate(clockwise);
-            PositionateCells(false);
-
-            _cellsRoot.DOComplete();
-            _cellsRoot.DORotate(new Vector3(0, 0, _cellsRoot.eulerAngles.z - ( clockwise ? 90 : -90)), _rotateAnimationDuration)
-                .SetEase(Ease.InOutSine);
-        }
     }
 }
