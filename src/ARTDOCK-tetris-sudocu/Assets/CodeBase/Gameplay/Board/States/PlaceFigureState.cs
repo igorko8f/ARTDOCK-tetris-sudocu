@@ -1,4 +1,7 @@
-﻿using CodeBase.Gameplay.Draggables;
+﻿using System.Collections.Generic;
+using CodeBase.Gameplay.Board.States.Payloads;
+using CodeBase.Gameplay.Draggables;
+using CodeBase.Gameplay.Figures;
 using CodeBase.Gameplay.Figures.Tray;
 using CodeBase.Infrastructure.Input;
 using CodeBase.Infrastructure.StateMachineService.StateInfrastructure;
@@ -38,13 +41,14 @@ namespace CodeBase.Gameplay.Board.States
             var figurePosition = figure.GetPosition();
             if (_gameBoard.TryGetCellAt(figurePosition, out var position))
             {
-                if (_gameBoard.CouldPlaceFigureOn(figure.GetMatrix(), position))
+                var boardPositions = _gameBoard.GetBoardPositionsAccordingToFigure(figure.GetMatrix(), position);
+                if (_gameBoard.CouldPlaceFigureOn(boardPositions))
                 {
-                    _gameBoard.ActivateCells(figure.GetMatrix(), position);
+                    _gameBoard.ActivateCells(boardPositions);
                     _tray.RemoveFigure(figure);
                     
                     _draggableService.ReleaseDraggable();
-                    _stateMachine.Enter<IdleState>();
+                    _stateMachine.Enter<CheckLinesState, IEnumerable<(int x, int y)>>(boardPositions);
                     return;
                 }
             }

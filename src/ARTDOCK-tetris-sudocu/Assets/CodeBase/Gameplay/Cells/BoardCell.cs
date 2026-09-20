@@ -1,4 +1,5 @@
 ﻿using CodeBase.Infrastructure.ResourcesProvider;
+using DG.Tweening;
 using UnityEngine;
 
 namespace CodeBase.Gameplay.Cells
@@ -6,6 +7,7 @@ namespace CodeBase.Gameplay.Cells
     public class BoardCell : MonoBehaviour, IResource
     {
         [SerializeField] private BoardCellView _view;
+        [SerializeField] private float DestroyAnimationInterval = 0.01f;
         
         private BoardCellData _data;
 
@@ -39,11 +41,14 @@ namespace CodeBase.Gameplay.Cells
             _view.UpdateView(_data);
         }
 
-        public void Cleanup()
+        public void Cleanup(bool forgetLocation = true)
         {
             _data.SetActive(false);
             _data.SetPreviewEnabled(false);
-            _data.UpdatePosition(-1, -1);
+            
+            if (forgetLocation)
+                _data.UpdatePosition(-1, -1);
+            
             _view.UpdateView(_data);
         }
 
@@ -66,5 +71,17 @@ namespace CodeBase.Gameplay.Cells
 
         public bool PreviewEnabled() => 
             _data.IsPreviewEnabled;
+
+        public Tween DestroyAnimation()
+        {
+            var sequence = DOTween.Sequence();
+            sequence.SetTarget(gameObject);
+            sequence.SetAutoKill(true);
+            
+            sequence.AppendCallback(() => Cleanup(false));
+            sequence.AppendInterval(DestroyAnimationInterval);
+
+            return sequence;
+        }
     }
 }

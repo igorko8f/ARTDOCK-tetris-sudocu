@@ -56,8 +56,10 @@ namespace CodeBase.Gameplay.Board.States
                 return;
 
             _gameBoard.ResetPreviewState();
-            if (_gameBoard.CouldPlaceFigureOn(_figure.GetMatrix(), position))
-                _gameBoard.ActivateCells(_figure.GetMatrix(), position, true);
+            
+            var positions = _gameBoard.GetBoardPositionsAccordingToFigure(_figure.GetMatrix(), position);
+            if (_gameBoard.CouldPlaceFigureOn(positions))
+                _gameBoard.ActivateCells(positions, true);
             
             _prevCellIndex = position;
         }

@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using CodeBase.Gameplay.Board.Factory;
 using CodeBase.Gameplay.Board.States;
+using CodeBase.Gameplay.Board.States.Payloads;
 using CodeBase.Gameplay.Cells;
 using CodeBase.Gameplay.Cells.Factory;
 using CodeBase.Gameplay.Common.Extensions;
@@ -55,7 +58,7 @@ namespace CodeBase.Gameplay.Board
                    y >= 0 && y < _configuration.Board_Height;
         }
 
-        public void ActivateCells(bool[,] figureMatrix, (int x, int y) coordinates, bool previewOnly = false)
+        public IEnumerable<(int x, int y)> GetBoardPositionsAccordingToFigure(bool[,] figureMatrix, (int x, int y) coordinates)
         {
             var offsetX = Mathf.FloorToInt(figureMatrix.SizeX() / 2f);
             var offsetY = Mathf.FloorToInt(figureMatrix.SizeY() / 2f);
@@ -70,49 +73,63 @@ namespace CodeBase.Gameplay.Board
                     var cellX = coordinates.x + x - offsetX;
                     var cellY = coordinates.y + y - offsetY;
 
-                    if (cellX >= 0 && cellX < _configuration.Board_With &&
-                        cellY >= 0 && cellY < _configuration.Board_Height)
-                    {
-                        if (previewOnly)
-                            _boardCells[cellX, cellY].SetPreviewState(true);
-                        else
-                            _boardCells[cellX, cellY].SetActive();
-                    }
+                    yield return (cellX, cellY);
                 }
             }
         }
-
-        public bool CouldPlaceFigureOn(bool[,] figureMatrix, (int x, int y) coordinates)
+        
+        public void ActivateCells(IEnumerable<(int x, int y)> boardPositions, bool previewOnly = false)
         {
-            var offsetX = Mathf.FloorToInt(figureMatrix.SizeX() / 2f);
-            var offsetY = Mathf.FloorToInt(figureMatrix.SizeY() / 2f);
-            
-            for (int x = 0; x < figureMatrix.SizeX(); x++)
+            foreach (var (x, y) in boardPositions)
             {
-                for (int y = 0; y < figureMatrix.SizeY(); y++)
-                {
-                    if (!figureMatrix[x, y])
-                        continue;
-                    
-                    var cellX = coordinates.x + x - offsetX;
-                    var cellY = coordinates.y + y - offsetY;
-
-                    if (cellX < 0 || cellX >= _configuration.Board_With ||
-                        cellY < 0 || cellY >= _configuration.Board_Height)
-                    {
-                        return false;
-                    }
-
-                    if (_boardCells[cellX, cellY].IsActive())
-                    {
-                        return false;
-                    }
-                }
+                if (IsInsideBoard(x, y) == false)
+                    continue;
+                
+                if (previewOnly)
+                    _boardCells[x, y].SetPreviewState(true);
+                else
+                    _boardCells[x, y].SetActive();
             }
+        }
 
+        public bool CouldPlaceFigureOn(IEnumerable<(int x, int y)> boardPositions)
+        {
+            foreach (var (x, y) in boardPositions)
+            {
+                if (IsInsideBoard(x, y) == false)
+                    return false;
+                
+                if (_boardCells[x, y].IsActive())
+                    return false;
+            }
+            
             return true;
         }
 
+        public List<CompletedLine> GetCompletedLines(IEnumerable<(int x, int y)> boardPositions)
+        {
+            var completedLines = new List<CompletedLine>();
+            var checkedRows = new HashSet<int>();
+            var checkedColumns = new HashSet<int>();
+
+            foreach (var (x, y) in boardPositions)
+            {
+                if (checkedRows.Add(y) && IsRowCompleted(y))
+                {
+                    var cells = GetRowCells(y, x);
+                    completedLines.Add(new CompletedLine(cells.ToList()));
+                }
+
+                if (checkedColumns.Add(x) && IsColumnCompleted(x))
+                {
+                    var cells = GetColumnCells(x, y);
+                    completedLines.Add(new CompletedLine(cells.ToList()));
+                }
+            }
+
+            return completedLines;
+        }
+        
         public void ResetPreviewState()
         {
             for (int x = 0; x < _configuration.Board_With; x++)
@@ -148,6 +165,70 @@ namespace CodeBase.Gameplay.Board
             }
         }
 
+        private bool IsInsideBoard(int x, int y)
+        {
+            return x >= 0 && x < _configuration.Board_With &&
+                   y >= 0 && y < _configuration.Board_Height;
+        }
+        
+        private bool IsRowCompleted(int y)
+        {
+            for (var x = 0; x < _configuration.Board_With; x++)
+            {
+                if (!_boardCells[x, y].IsActive())
+                    return false;
+            }
+
+            return true;
+        }
+        
+        private bool IsColumnCompleted(int x)
+        {
+            for (var y = 0; y < _configuration.Board_Height; y++)
+            {
+                if (!_boardCells[x, y].IsActive())
+                    return false;
+            }
+
+            return true;
+        }
+        
+        private IEnumerable<BoardCell> GetRowCells(int y, int startX)
+        {
+            yield return _boardCells[startX, y];
+            
+            for (var distance = 1; distance < _configuration.Board_With; distance++)
+            {
+                var left = startX - distance;
+
+                if (left >= 0)
+                    yield return _boardCells[left, y];
+
+                var right = startX + distance;
+
+                if (right < _configuration.Board_With)
+                    yield return _boardCells[right, y];
+            }
+        }
+        
+        private IEnumerable<BoardCell> GetColumnCells(int x, int startY)
+        {
+            yield return _boardCells[x, startY];
+            
+            for (var distance = 1; distance < _configuration.Board_Height; distance++)
+            {
+                var bottom = startY - distance;
+
+                if (bottom >= 0)
+                    yield return _boardCells[x, bottom];
+
+                var top = startY + distance;
+
+                if (top < _configuration.Board_Height)
+                    yield return _boardCells[x, top];
+            }
+        }
+        
         public void Dispose()
         {
             _boardCells = null;
