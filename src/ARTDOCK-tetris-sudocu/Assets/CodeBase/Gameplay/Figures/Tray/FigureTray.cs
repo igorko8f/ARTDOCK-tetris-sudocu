@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CodeBase.Gameplay.Common.Extensions;
@@ -88,5 +89,8 @@ namespace CodeBase.Gameplay.Figures.Tray
                 _figures.Add(figure);
             }
         }
+
+        public IEnumerable<Figure> GetRemainedFigures() => 
+            _figures.Where(figure => !figure.IsDisposed);
     }
 }

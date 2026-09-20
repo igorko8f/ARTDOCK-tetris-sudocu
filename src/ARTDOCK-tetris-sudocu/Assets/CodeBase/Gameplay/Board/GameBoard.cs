@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeBase.Gameplay.Board.Factory;
 using CodeBase.Gameplay.Board.States;
-using CodeBase.Gameplay.Board.States.Payloads;
 using CodeBase.Gameplay.Cells;
 using CodeBase.Gameplay.Cells.Factory;
 using CodeBase.Gameplay.Common.Extensions;
@@ -46,7 +45,7 @@ namespace CodeBase.Gameplay.Board
             var localPosition = _view.GetCellsParent().InverseTransformPoint(worldPosition);
 
             localPosition += new Vector3(
-                _configuration.Board_With * _cellsFactory.CellSize * 0.5f,
+                _configuration.Board_Width * _cellsFactory.CellSize * 0.5f,
                 _configuration.Board_Height * _cellsFactory.CellSize * 0.5f);
             
             var x = Mathf.FloorToInt(localPosition.x / _cellsFactory.CellSize);
@@ -54,7 +53,7 @@ namespace CodeBase.Gameplay.Board
 
             coordinates = (x, y);
 
-            return x >= 0 && x < _configuration.Board_With &&
+            return x >= 0 && x < _configuration.Board_Width &&
                    y >= 0 && y < _configuration.Board_Height;
         }
 
@@ -90,6 +89,25 @@ namespace CodeBase.Gameplay.Board
                 else
                     _boardCells[x, y].SetActive();
             }
+        }
+
+        public bool CouldPlaceFigure(bool [, ] matrix)
+        {
+            for (int x = 0; x < _configuration.Board_Width; x++)
+            {
+                for (int y = 0; y < _configuration.Board_Height; y++)
+                {
+                    var position = (x, y);
+                    if (_boardCells[x, y].IsActive())
+                        continue;
+                    
+                    var boardPositions = GetBoardPositionsAccordingToFigure(matrix, position);
+                    if (CouldPlaceFigureOn(boardPositions))
+                        return true;
+                }
+            }
+
+            return false;
         }
 
         public bool CouldPlaceFigureOn(IEnumerable<(int x, int y)> boardPositions)
@@ -132,7 +150,7 @@ namespace CodeBase.Gameplay.Board
         
         public void ResetPreviewState()
         {
-            for (int x = 0; x < _configuration.Board_With; x++)
+            for (int x = 0; x < _configuration.Board_Width; x++)
             {
                 for (int y = 0; y < _configuration.Board_Height; y++)
                 {
@@ -145,19 +163,19 @@ namespace CodeBase.Gameplay.Board
         }
 
         private void CreateBoardView() => 
-            _view = _boardFactory.CreateBoardView(_configuration.Board_With, _configuration.Board_Height);
+            _view = _boardFactory.CreateBoardView(_configuration.Board_Width, _configuration.Board_Height);
 
         private void FillBoardWithCells()
         {
-            _boardCells = new BoardCell[_configuration.Board_With, _configuration.Board_Height];
+            _boardCells = new BoardCell[_configuration.Board_Width, _configuration.Board_Height];
 
-            for (int x = 0; x < _configuration.Board_With; x++)
+            for (int x = 0; x < _configuration.Board_Width; x++)
             {
                 for (int y = 0; y < _configuration.Board_Height; y++)
                 {
                     var _boardCell = _cellsFactory.CreateEmptyCell(x, y, _view.GetCellsParent());
                     
-                    var cellOffset = _boardCell.GetCellOffset(_configuration.Board_With, _configuration.Board_Height);
+                    var cellOffset = _boardCell.GetCellOffset(_configuration.Board_Width, _configuration.Board_Height);
                     _boardCell.SetWorldPosition(_view.GetCenterPosition() + cellOffset);
                     
                     _boardCells[x, y] = _boardCell;
@@ -167,13 +185,13 @@ namespace CodeBase.Gameplay.Board
 
         private bool IsInsideBoard(int x, int y)
         {
-            return x >= 0 && x < _configuration.Board_With &&
+            return x >= 0 && x < _configuration.Board_Width &&
                    y >= 0 && y < _configuration.Board_Height;
         }
         
         private bool IsRowCompleted(int y)
         {
-            for (var x = 0; x < _configuration.Board_With; x++)
+            for (var x = 0; x < _configuration.Board_Width; x++)
             {
                 if (!_boardCells[x, y].IsActive())
                     return false;
@@ -197,7 +215,7 @@ namespace CodeBase.Gameplay.Board
         {
             yield return _boardCells[startX, y];
             
-            for (var distance = 1; distance < _configuration.Board_With; distance++)
+            for (var distance = 1; distance < _configuration.Board_Width; distance++)
             {
                 var left = startX - distance;
 
@@ -206,7 +224,7 @@ namespace CodeBase.Gameplay.Board
 
                 var right = startX + distance;
 
-                if (right < _configuration.Board_With)
+                if (right < _configuration.Board_Width)
                     yield return _boardCells[right, y];
             }
         }

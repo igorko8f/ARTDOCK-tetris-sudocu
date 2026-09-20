@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using CodeBase.Gameplay.Board.States.Payloads;
 using CodeBase.Gameplay.Draggables;
 using CodeBase.Gameplay.Figures;
 using CodeBase.Gameplay.Figures.Tray;
@@ -55,7 +54,7 @@ namespace CodeBase.Gameplay.Board.States
             
             figure.RestorePosition();
             _draggableService.ReleaseDraggable();
-            _stateMachine.Enter<IdleState>();
+            _stateMachine.Enter<CheckLoseState>();
         }
     }
 }

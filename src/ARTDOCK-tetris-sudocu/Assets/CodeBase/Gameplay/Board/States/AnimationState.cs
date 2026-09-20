@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using CodeBase.Gameplay.Board.States.Payloads;
 using CodeBase.Infrastructure.StateMachineService.StateInfrastructure;
 using CodeBase.Infrastructure.StateMachineService.StateMachine;
 using DG.Tweening;
@@ -39,7 +38,7 @@ namespace CodeBase.Gameplay.Board.States
                 sequence.Join(lineSequence);
             }
             
-            sequence.OnComplete(() => _stateMachine.Enter<IdleState>());
+            sequence.OnComplete(() => _stateMachine.Enter<CheckLoseState>());
             sequence.Play();
         }
     }

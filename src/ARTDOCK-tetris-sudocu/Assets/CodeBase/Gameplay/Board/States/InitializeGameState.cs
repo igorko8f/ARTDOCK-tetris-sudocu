@@ -26,7 +26,8 @@ namespace CodeBase.Gameplay.Board.States
             _gameBoard.BuildBoard();
             _figureTray.BuildTray();
 
-            _stateMachine.Enter<IdleState>();
+            //Going to checking lose state to prevent case when board size is too small for figures to be placed
+            _stateMachine.Enter<CheckLoseState>();
         }
     }
 }

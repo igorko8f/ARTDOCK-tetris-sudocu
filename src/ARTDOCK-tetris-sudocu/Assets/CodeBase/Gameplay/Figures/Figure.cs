@@ -20,6 +20,8 @@ namespace CodeBase.Gameplay.Figures
         
         [SerializeField] private Collider2D _collider;
         [SerializeField] private Rigidbody2D _rigidbody;
+
+        public bool IsDisposed { get; private set; }
         
         private IBoardCellsFactory _boardCellsFactory;
         private CompositeDisposable _compositeDisposable;
@@ -59,7 +61,8 @@ namespace CodeBase.Gameplay.Figures
             
             BuildFigureCells();
             SetInteractableState(true);
-            
+
+            IsDisposed = false;
             _figureUI.Show();
         }
 
@@ -108,7 +111,8 @@ namespace CodeBase.Gameplay.Figures
             
             RestorePosition();
             CleanUpCells();
-            
+
+            IsDisposed = true;
             _figureUI.Hide();
         }
 

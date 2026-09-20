@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using CodeBase.Gameplay.Board.States.Payloads;
 using CodeBase.Infrastructure.StateMachineService.StateInfrastructure;
 using CodeBase.Infrastructure.StateMachineService.StateMachine;
 
@@ -25,7 +24,7 @@ namespace CodeBase.Gameplay.Board.States
             var completedLines = _board.GetCompletedLines(positions);
             if (!completedLines.Any())
             {
-                _stateMachine.Enter<IdleState>();
+                _stateMachine.Enter<CheckLoseState>();
             }
             else
             {
