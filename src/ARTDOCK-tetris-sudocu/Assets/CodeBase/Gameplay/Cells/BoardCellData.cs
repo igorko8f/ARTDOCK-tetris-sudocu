@@ -12,5 +12,14 @@
             IsPreviewEnabled = false;
             Position = (x, y);
         }
+
+        public void UpdatePosition(int x, int y) => 
+            Position = (x, y);
+        
+        public void SetActive(bool isActive) => 
+            IsActive = isActive;
+
+        public void SetPreviewEnabled(bool isPreviewEnabled) => 
+            IsPreviewEnabled = isPreviewEnabled;
     }
 }

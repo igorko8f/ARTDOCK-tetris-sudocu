@@ -84,7 +84,16 @@ namespace CodeBase.Gameplay.Board.Figures.Editor
         private bool CanActivateCell(FigureConfiguration figure, int x, int y) => 
             figure.Matrix.IsEmpty() || figure.Matrix.HasActiveNeighbour(x, y);
 
-        private bool CanDeactivateCell(FigureConfiguration figure, int x, int y) => 
-            figure.Matrix.ActiveNeighboursCount(x, y) <= 1;
+        private bool CanDeactivateCell(FigureConfiguration figure, int x, int y)
+        {
+            var matrix = figure.Matrix;
+            var tmpValue = matrix[x, y];
+
+            matrix[x, y] = false;
+            var isConnected = matrix.IsConnected();
+            
+            matrix[x, y] = tmpValue;
+            return isConnected;
+        }
     }
 }

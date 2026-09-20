@@ -1,16 +1,26 @@
-﻿using CodeBase.Infrastructure.StateMachineService.StateInfrastructure;
+﻿using System;
+using CodeBase.Infrastructure.StateMachineService.StateInfrastructure;
 using RSG;
+using UnityEngine;
 using Zenject;
 
 namespace CodeBase.Infrastructure.StateMachineService.StateMachine
 {
-    public class GameStateMachine : IGameStateMachine, ITickable
+    public class GameStateMachine : IGameStateMachine, ITickable, IDisposable
     {
-        private IExitableState _activeState;
         private readonly IInstantiator _instantiator;
+        private IExitableState _activeState;
 
-        public GameStateMachine(DiContainer container) =>
+        public GameStateMachine(DiContainer container)
+        {
             _instantiator = container;
+            Promise.UnhandledException += LogPromiseException;
+        }
+
+        public void Dispose()
+        {
+            Promise.UnhandledException -= LogPromiseException;
+        }
 
         public void Tick()
         {
@@ -70,6 +80,11 @@ namespace CodeBase.Infrastructure.StateMachineService.StateMachine
         {
             TState state = _instantiator.Instantiate<TState>();
             return Promise<TState>.Resolved(state);
+        }
+
+        private void LogPromiseException(object sender, ExceptionEventArgs e)
+        {
+            Debug.LogError($"Error in promise: {sender} - {e.Exception.Message}");
         }
     }
 }

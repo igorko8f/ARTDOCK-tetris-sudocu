@@ -78,7 +78,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CodeBase.Gameplay.Figures.Tray.FigureTray
   _trayRoot: {fileID: 350099290555808720}
-  _trayCenter: {fileID: 4715348143347939657}
+  _figureXOffset: 0
 --- !u!1 &9196697922466059457
 GameObject:
   m_ObjectHideFlags: 0

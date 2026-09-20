@@ -46,6 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c4b6fca49da41a8a508227428754a3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CodeBase.Gameplay.Figures.Figure
+  _cellsRoot: {fileID: 1113912291193932693}
+  _rotateAnimationDuration: 0.2
 --- !u!61 &2668965198115208173
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -15,8 +15,37 @@ namespace CodeBase.Gameplay.Cells
             _view.UpdateView(_data);
         }
 
+        public void Show() => 
+            gameObject.SetActive(true);
+
+        public void Hide() => 
+            gameObject.SetActive(false);
+
         public void SetWorldPosition(Vector2 getCenterPosition) => 
             transform.position = getCenterPosition;
+
+        public void UpdatePosition(int x, int y) => 
+            _data.UpdatePosition(x, y);
+
+        public void SetActive()
+        {
+            _data.SetActive(true);
+            _view.UpdateView(_data);
+        }
+
+        public void SetPreviewState(bool isEnabled)
+        {
+            _data.SetPreviewEnabled(isEnabled);
+            _view.UpdateView(_data);
+        }
+
+        public void Cleanup()
+        {
+            _data.SetActive(false);
+            _data.SetPreviewEnabled(false);
+            _data.UpdatePosition(-1, -1);
+            _view.UpdateView(_data);
+        }
 
         public Vector2 GetCellOffset(int width, int height)
         {

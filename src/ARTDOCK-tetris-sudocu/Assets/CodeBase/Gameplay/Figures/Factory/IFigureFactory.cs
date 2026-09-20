@@ -1,7 +1,9 @@
-﻿namespace CodeBase.Gameplay.Figures.Factory
+﻿using UnityEngine;
+
+namespace CodeBase.Gameplay.Figures.Factory
 {
     public interface IFigureFactory
     {
-        Figure CreateFigure(FigureConfiguration configuration);
+        Figure CreateFigure(Transform parent);
     }
 }

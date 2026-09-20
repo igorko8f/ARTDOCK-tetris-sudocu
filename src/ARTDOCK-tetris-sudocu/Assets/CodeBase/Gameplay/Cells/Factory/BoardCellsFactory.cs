@@ -28,6 +28,15 @@ namespace CodeBase.Gameplay.Cells.Factory
             cell.Initialize(data);
             return cell;
         }
+        
+        public BoardCell CreateEmptyCell(Transform parent)
+        {
+            var cell = _container.InstantiatePrefabForComponent<BoardCell>(_cellPrefab, parent);
+            var data = new BoardCellData(-1, -1);
+            
+            cell.Initialize(data);
+            return cell;
+        }
 
         public void Dispose()
         {
