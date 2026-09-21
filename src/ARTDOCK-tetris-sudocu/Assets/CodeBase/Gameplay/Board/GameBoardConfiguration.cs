@@ -8,5 +8,7 @@ namespace CodeBase.Gameplay.Board
     {
         public int Board_Width = 8;
         public int Board_Height = 8;
+        
+        public int ScoreAmountPerCell = 13;
     }
 }

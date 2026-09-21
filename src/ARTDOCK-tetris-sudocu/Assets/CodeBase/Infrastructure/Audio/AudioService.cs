@@ -7,8 +7,7 @@ namespace CodeBase.Infrastructure.Audio
     {
         [SerializeField] private AudioSource _sfxSource;
         [SerializeField] private AudioSource _musicSource;
-
-        private AudioMixer _audioMixer;
+        [SerializeField] private AudioMixer _audioMixer;
 
         private const string MasterVolume = "MasterVolume";
         private const string MusicVolume = "MusicVolume";

@@ -6,6 +6,8 @@ using CodeBase.Gameplay.Draggables;
 using CodeBase.Gameplay.Draggables.Physics;
 using CodeBase.Gameplay.Figures.Factory;
 using CodeBase.Gameplay.Figures.Tray;
+using CodeBase.Gameplay.PlayerScore;
+using CodeBase.Gameplay.UI;
 using CodeBase.Infrastructure.StateMachineService.StateMachine;
 using UnityEngine;
 using Zenject;
@@ -16,6 +18,7 @@ namespace CodeBase.Infrastructure.Installers
     {
         [SerializeField] private FigureTray _figureTrayPrefab;
         [SerializeField] private Transform _figureTrayOrigin;
+        [SerializeField] private UIPopups _uiPopups;
         
         public override void InstallBindings()
         {
@@ -24,12 +27,29 @@ namespace CodeBase.Infrastructure.Installers
             BindGameStateMachine();
             BindFigures();
             BindDraggableService();
+            BindPlayerScoreService();
+            BindUIPopups();
         }
 
         public void Initialize()
         {
             Container.Resolve<IGameStateMachine>()
                 .Enter<InitializeGameState>();
+        }
+
+        private void BindUIPopups()
+        {
+            Container.Bind<UIPopups>()
+                .To<UIPopups>()
+                .FromComponentInNewPrefab(_uiPopups)
+                .AsSingle()
+                .NonLazy();
+        }
+
+        private void BindPlayerScoreService()
+        {
+            Container.BindInterfacesTo<PlayerScoreService>()
+                .AsSingle();
         }
 
         private void BindDraggableService()

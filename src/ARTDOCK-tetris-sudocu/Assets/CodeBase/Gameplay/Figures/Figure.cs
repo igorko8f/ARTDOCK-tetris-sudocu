@@ -48,18 +48,8 @@ namespace CodeBase.Gameplay.Figures
             _boardCellsFactory = boardCellsFactory;
             _soundsConfig = resourcesProvider.LoadResource<SoundsConfig>();
             _audioService = audioService;
-            _compositeDisposable = new CompositeDisposable();
             
             _figureUI.Initialize(cameraService.GetMainCamera());
-            
-            _figureUI.RotateClockwisePressed
-                .Subscribe(_ => Rotate(true))
-                .AddTo(_compositeDisposable);
-            
-            _figureUI.RotateCounterClockwisePressed
-                .Subscribe(_ => Rotate(false))
-                .AddTo(_compositeDisposable);
-            
             _cells = new List<BoardCell>(MaxSize * MaxSize);
         }
 
@@ -69,8 +59,23 @@ namespace CodeBase.Gameplay.Figures
             
             BuildFigureCells();
             SetInteractableState(true);
-
+            SetupUI();
+            
             IsDisposed = false;
+        }
+
+        private void SetupUI()
+        {
+            _compositeDisposable = new CompositeDisposable();
+            
+            _figureUI.RotateClockwisePressed
+                .Subscribe(_ => Rotate(true))
+                .AddTo(_compositeDisposable);
+            
+            _figureUI.RotateCounterClockwisePressed
+                .Subscribe(_ => Rotate(false))
+                .AddTo(_compositeDisposable);
+            
             _figureUI.Show();
         }
 

@@ -17,17 +17,22 @@ namespace CodeBase.Infrastructure.Loading
 
         public void LoadScene(string name, Action onLoaded = null)
         {
+            if (SceneManager.GetActiveScene().name == name)
+            {
+                onLoaded?.Invoke();
+                return;
+            }
+            
+            _coroutineRunner.RunCoroutine(Load(name, onLoaded));
+        }
+        
+        public void RestartScene(string name, Action onLoaded = null)
+        {
             _coroutineRunner.RunCoroutine(Load(name, onLoaded));
         }
 
         private IEnumerator Load(string nextScene, Action onLoaded)
         {
-            if (SceneManager.GetActiveScene().name == nextScene)
-            {
-                onLoaded?.Invoke();
-                yield break;
-            }
-
             AsyncOperation waitNextScene = SceneManager.LoadSceneAsync(nextScene);
 
             while (!waitNextScene.isDone)

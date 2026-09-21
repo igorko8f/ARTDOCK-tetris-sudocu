@@ -8,9 +8,11 @@ namespace CodeBase.Infrastructure.StateMachineService.StateMachine
 {
     public class GameStateMachine : IGameStateMachine, ITickable, IDisposable
     {
+        public IExitableState CurrentState => _activeState;
+        
         private readonly IInstantiator _instantiator;
         private IExitableState _activeState;
-
+        
         public GameStateMachine(DiContainer container)
         {
             _instantiator = container;

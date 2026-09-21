@@ -8,6 +8,7 @@ namespace CodeBase.Gameplay.Cells
     {
         [SerializeField] private BoardCellView _view;
         [SerializeField] private float DestroyAnimationInterval = 0.01f;
+        [SerializeField] private ParticleSystem DestroyVFX;
         
         private BoardCellData _data;
 
@@ -77,7 +78,7 @@ namespace CodeBase.Gameplay.Cells
             var sequence = DOTween.Sequence();
             sequence.SetTarget(gameObject);
             sequence.SetAutoKill(true);
-            
+            sequence.AppendCallback(() => DestroyVFX.Play());
             sequence.AppendCallback(() => Cleanup(false));
             sequence.AppendInterval(DestroyAnimationInterval);
 

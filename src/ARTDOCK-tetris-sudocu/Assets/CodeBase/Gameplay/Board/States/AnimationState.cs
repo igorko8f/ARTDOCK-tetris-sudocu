@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CodeBase.Gameplay.PlayerScore;
 using CodeBase.Infrastructure.Audio;
 using CodeBase.Infrastructure.ResourcesProvider;
 using CodeBase.Infrastructure.StateMachineService.StateInfrastructure;
@@ -12,13 +13,15 @@ namespace CodeBase.Gameplay.Board.States
         private readonly IGameStateMachine _stateMachine;
         private readonly IProjectResourcesProvider _resourcesProvider;
         private readonly IAudioService _audioService;
-
+        private readonly IPlayerScoreService _playerScoreService;
         public AnimationState(IGameStateMachine stateMachine,
             IProjectResourcesProvider resourcesProvider,
+            IPlayerScoreService playerScoreService,
             IAudioService audioService)
         {
             _stateMachine = stateMachine;
             _resourcesProvider = resourcesProvider;
+            _playerScoreService = playerScoreService;
             _audioService = audioService;
         }
 
@@ -26,9 +29,19 @@ namespace CodeBase.Gameplay.Board.States
         {
             base.Enter(completedLines);
 
+            CalculateAndAddPlayerScore(completedLines);
             PlayDestroyAnimation(completedLines);
             PlayDestroySFX();
+        }
 
+        private void CalculateAndAddPlayerScore(List<CompletedLine> completedLines)
+        {
+            long scoreToAdd = 0;
+
+            for (var i = 0; i < completedLines.Count; i++) 
+                scoreToAdd += completedLines[i].Line.Count * _playerScoreService.AmountPerCell;
+            
+            _playerScoreService.AddScore(scoreToAdd);
         }
 
         private void PlayDestroySFX()
