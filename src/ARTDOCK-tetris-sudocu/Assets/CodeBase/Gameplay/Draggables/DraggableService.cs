@@ -2,7 +2,9 @@
 using CodeBase.Gameplay.Board.States;
 using CodeBase.Gameplay.Draggables.Physics;
 using CodeBase.Gameplay.Figures;
+using CodeBase.Infrastructure.Audio;
 using CodeBase.Infrastructure.Input;
+using CodeBase.Infrastructure.ResourcesProvider;
 using CodeBase.Infrastructure.StateMachineService.StateMachine;
 using R3;
 using UnityEngine;
@@ -17,17 +19,24 @@ namespace CodeBase.Gameplay.Draggables
         private readonly IPhysicsInteractions _physicsInteractions;
         private readonly IGameStateMachine _stateMachine;
         private readonly CompositeDisposable _compositeDisposable;
+        private readonly IAudioService _audioService;
+        private readonly SoundsConfig _soundsConfig;
 
         private Figure _currentDraggable;
         private Vector3 _dragOffset;
 
         public DraggableService(IInputService inputService, 
             IPhysicsInteractions physicsInteractions,
-            IGameStateMachine stateMachine)
+            IGameStateMachine stateMachine,
+            IProjectResourcesProvider resourcesProvider,
+            IAudioService audioService)
         {
             _inputService = inputService;
             _physicsInteractions = physicsInteractions;
             _stateMachine = stateMachine;
+            _audioService = audioService;
+            _soundsConfig = resourcesProvider.LoadResource<SoundsConfig>();
+            
             _compositeDisposable = new CompositeDisposable();
             
             _inputService.RotatePressed
@@ -50,6 +59,7 @@ namespace CodeBase.Gameplay.Draggables
         public void ReleaseDraggable()
         {
             _currentDraggable = null;
+            PlayPlaceSFX();
         }
 
         private void OnRotatePressed()
@@ -94,7 +104,15 @@ namespace CodeBase.Gameplay.Draggables
             _currentDraggable = draggable;
             _dragOffset = _currentDraggable.transform.position - _inputService.GetMouseWorldPosition();
             _currentDraggable.BeforeDraggingPerformed();
+            
+            PlayTakeSFX();
         }
+
+        private void PlayTakeSFX() => 
+            _audioService.PlaySfx(_soundsConfig.TakeSFX);
+
+        private void PlayPlaceSFX() => 
+            _audioService.PlaySfx(_soundsConfig.PlaceSFX);
 
         private bool IsDragging() =>
             _currentDraggable != null;

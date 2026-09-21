@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dde6ad81ec34cf5bb23674400fa47e1, type: 3}
+  m_Name: SoundsConfig
+  m_EditorClassIdentifier: Assembly-CSharp::CodeBase.Infrastructure.Audio.SoundsConfig
+  BackgroundClip: {fileID: 8300000, guid: cb2bca8173a833d41be8ab5422ce77fc, type: 3}
+  DestroySFX: {fileID: 8300000, guid: 7ac9be0e19735514a839fcb65283dd1a, type: 3}
+  PlaceSFX: {fileID: 8300000, guid: 2d313aa34b9623b48ae79991a8d8596e, type: 3}
+  RotateSFX: {fileID: 8300000, guid: 46f4406a0cbb60f4997a148813054c22, type: 3}
+  TakeSFX: {fileID: 8300000, guid: ca832aafcc6a23f4dbaf1bc023131f3d, type: 3}

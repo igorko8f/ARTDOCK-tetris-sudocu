@@ -77,3 +77,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CodeBase.Infrastructure.Installers.ProjectInstaller
   _coroutineRunner: {fileID: 4572645613271795877, guid: b15ce4735698c9b41add09f8e4723b1b, type: 3}
+  _audioService: {fileID: 5925611411305850593, guid: c7fa6ce46bcf21648b28c33ea9d67888, type: 3}

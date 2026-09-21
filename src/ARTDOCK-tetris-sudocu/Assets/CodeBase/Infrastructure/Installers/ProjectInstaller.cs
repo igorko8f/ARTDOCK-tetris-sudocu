@@ -1,8 +1,10 @@
-﻿using CodeBase.Infrastructure.CoroutineRunner;
+﻿using CodeBase.Infrastructure.Audio;
+using CodeBase.Infrastructure.CoroutineRunner;
 using CodeBase.Infrastructure.Input;
 using CodeBase.Infrastructure.Loading;
 using CodeBase.Infrastructure.MainCameraService;
 using CodeBase.Infrastructure.ResourcesProvider;
+using CodeBase.Infrastructure.SaveLoad;
 using CodeBase.Infrastructure.StateMachineService.StateMachine;
 using UnityEngine;
 using Zenject;
@@ -12,6 +14,7 @@ namespace CodeBase.Infrastructure.Installers
     public class ProjectInstaller : MonoInstaller
     {
         [SerializeField] private CoroutineRunnerComponent _coroutineRunner;
+        [SerializeField] private AudioService _audioService;
         
         public override void InstallBindings()
         {
@@ -21,6 +24,24 @@ namespace CodeBase.Infrastructure.Installers
             BindInputService();
             BindCameraService();
             BindProjectResourcesProvider();
+            BindSaveService();
+            BindAudioService();
+        }
+
+        private void BindAudioService()
+        {
+            Container.Bind<IAudioService>()
+                .To<AudioService>()
+                .FromComponentInNewPrefab(_audioService)
+                .AsSingle()
+                .NonLazy();
+        }
+
+        private void BindSaveService()
+        {
+            Container.Bind<ISaveService>()
+                .To<SaveService>()
+                .AsSingle();
         }
 
         private void BindProjectResourcesProvider()

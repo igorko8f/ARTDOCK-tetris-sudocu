@@ -3,6 +3,7 @@ using CodeBase.Gameplay.Board;
 using CodeBase.Gameplay.Cells;
 using CodeBase.Gameplay.Figures;
 using CodeBase.Gameplay.Figures.Tray;
+using CodeBase.Infrastructure.Audio;
 
 namespace CodeBase.Infrastructure.ResourcesProvider
 {
@@ -13,6 +14,7 @@ namespace CodeBase.Infrastructure.ResourcesProvider
         {
             new (typeof(GameBoardConfiguration), "Configuration"),
             new (typeof(FigureConfiguration), "Configuration/Figures"),
+            new (typeof(SoundsConfig), "Configuration/Audio"),
             new (typeof(BoardCell), "Prefabs"),
             new (typeof(GameBoardView), "Prefabs"),
             new (typeof(FigureTray), "Prefabs"),

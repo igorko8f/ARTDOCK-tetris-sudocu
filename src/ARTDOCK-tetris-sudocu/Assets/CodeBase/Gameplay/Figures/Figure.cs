@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CodeBase.Gameplay.Cells;
 using CodeBase.Gameplay.Cells.Factory;
 using CodeBase.Gameplay.Common.Extensions;
+using CodeBase.Infrastructure.Audio;
 using CodeBase.Infrastructure.MainCameraService;
 using CodeBase.Infrastructure.ResourcesProvider;
 using DG.Tweening;
@@ -25,21 +26,28 @@ namespace CodeBase.Gameplay.Figures
         
         private IBoardCellsFactory _boardCellsFactory;
         private CompositeDisposable _compositeDisposable;
+        private SoundsConfig _soundsConfig;
+        private IAudioService _audioService;
 
         private int MaxSize => FigureConfiguration.Size;
         private int X_Size => _matrix.GetLength(0);
         private int Y_Size => _matrix.GetLength(1);
-        
+
         private Vector3 _initialPosition;
         private Transform _origin;
-        
+
         private bool[,] _matrix;
         private List<BoardCell> _cells;
 
         [Inject]
-        public void Construct(IBoardCellsFactory boardCellsFactory, ICameraService cameraService)
+        public void Construct(IBoardCellsFactory boardCellsFactory, 
+            ICameraService cameraService,
+            IProjectResourcesProvider resourcesProvider,
+            IAudioService audioService)
         {
             _boardCellsFactory = boardCellsFactory;
+            _soundsConfig = resourcesProvider.LoadResource<SoundsConfig>();
+            _audioService = audioService;
             _compositeDisposable = new CompositeDisposable();
             
             _figureUI.Initialize(cameraService.GetMainCamera());
@@ -74,6 +82,8 @@ namespace CodeBase.Gameplay.Figures
             _cellsRoot.DOComplete();
             _cellsRoot.DORotate(new Vector3(0, 0, _cellsRoot.eulerAngles.z - ( clockwise ? 90 : -90)), _rotateAnimationDuration)
                 .SetEase(Ease.InOutSine);
+
+            PlayRotateSFX();
         }
 
         public Vector2 GetPosition() => 
@@ -116,6 +126,9 @@ namespace CodeBase.Gameplay.Figures
             _figureUI.Hide();
         }
 
+        private void PlayRotateSFX() => 
+            _audioService.PlaySfx(_soundsConfig.RotateSFX);
+        
         private void CleanUpCells()
         {
             foreach (var cell in _cells)
