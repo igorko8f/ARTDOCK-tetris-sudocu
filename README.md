@@ -4,6 +4,9 @@ A test assignment for a **Unity Developer** position.
 
 A small puzzle game combining mechanics from **Tetris** and **Sudoku / Block Puzzle**. The player receives a set of three figures and places them on the game board. Once all three figures have been used, a new set is generated. Whenever a complete row or column is formed, it is cleared and the player receives points.
 
+Project has `Bootsrap` scene but play mode could be launched from any other scene, since `SwitchToEntrySceneInEditor` is placed on any gameobject inside this scene.
+Its editor only script used for auto load gameplay from Bootstrap scene.
+
 ## Technologies
 
 * **Unity 6000.3.16f1**
