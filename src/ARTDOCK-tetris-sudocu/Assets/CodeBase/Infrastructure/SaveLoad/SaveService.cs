@@ -1,5 +1,4 @@
 ﻿using System;
-using CodeBase.Infrastructure.SaveLoad.Data;
 using CodeBase.Infrastructure.SaveLoad.Serialization;
 using CodeBase.Infrastructure.SaveLoad.Storage;
 

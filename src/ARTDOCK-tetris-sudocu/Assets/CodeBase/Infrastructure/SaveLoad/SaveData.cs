@@ -1,4 +1,4 @@
-namespace CodeBase.Infrastructure.SaveLoad.Data
+namespace CodeBase.Infrastructure.SaveLoad
 {
     public class SaveData
     {
